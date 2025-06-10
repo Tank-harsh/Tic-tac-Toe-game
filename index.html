@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  </head>
+  <body>
+     <!-- Background Video -->
+  <video autoplay muted loop id="backgroundVideo">
+    <source src="/tictac.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+    <div class="currentPlayer">
+      <div id="currentPlayer">Current Player: X</div>
+    </div class="content">
+    <div>
+    <!-- Added this line -->
+    <div id="gameBoard"></div>
+    <div id="result"></div>
+    <div id="buttonDiv">
+      <button id="resetButton">Play Again</button>
+      <button id="soundButton">Sound: ON</button>
+    </div>
+    </div>
+    <script src="js/script.js"></script>
+  </body>
+</html>
