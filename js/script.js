@@ -1,118 +1,121 @@
-const gameBoard = document.getElementById("gameBoard");
-const resultElement = document.getElementById("result");
-const currentPlayerDisplay = document.getElementById("currentPlayer");
-const soundButton = document.getElementById("soundButton");
+let boxes = document.querySelectorAll(".box");
+let resetbtn = document.querySelector("#reset_button");
+let newgame = document.querySelector("#new-game");
+let msgContainer = document.querySelectorAll(".msg-container");
+let msg = document.querySelector("#massage");
+let drow = document.querySelector(".matchdrow");
+let dro_msg = document.querySelector("#massage_drow");
 
-let currentPlayer = "X";
-let gameIsOver = false;
+let turn0 = true; //playerX ,playerO
 
-//sound-effects"
-const backgroundSound = new Audio("sounds/background.wav");
-const clickSound = new Audio("sounds/click.wav");
-const winSound = new Audio("sounds/win.wav");
+const winPatterns = [
+  [0, 1, 2],
+  [0, 3, 6],
+  [0, 4, 8],
+  [1, 4, 7],
+  [2, 4, 6],
+  [2, 5, 8],
+  [3, 4, 5],
+  [6, 7, 8],
+];
 
-backgroundSound.loop = true;
-backgroundSound.volume = 0.1;
-backgroundSound.play();
+//match drow condition
+const match_drow = () => {
+  dro_msg.innerText = "Match is draw !please restart the game";
+  // drow.forEach(msgcont =>{                    //don't use foreach beacause this is for listof element
+  //   msgcont.classList.remove("hide");
+  // });
+  drow.classList.remove("hide");
+  disablebox();
+};
 
-soundButton.addEventListener("click", () => {
-  if (backgroundSound.paused) {
-    backgroundSound.play();
-    soundButton.textContent = "Sound: On";
-  } else {
-    backgroundSound.pause();
-    soundButton.textContent = "Sound: Off";
-  }
+//reset button
+const resetgame = () => {
+  turn0 = true;
+  enableboxes();
+  msgContainer.forEach((msgcont) => {
+    msgcont.classList.add("hide");
+    drow.classList.add("hide");
+  });
+};
+//new button
+const newgm = () => {
+  turn0 = true;
+  enableboxes();
+  msgContainer.forEach((msgcont) => {
+    msgcont.classList.add("hide");
+    drow.classList.add("hide");
+  });
+};
+
+boxes.forEach((box) => {
+  box.addEventListener("click", () => {
+    console.log("box was click");
+    if (turn0) {
+      box.innerText = "O";
+      turn0 = false;
+    } else {
+      box.innerText = "X";
+      turn0 = true;
+    }
+    box.disabled = true;
+    checkWinner();
+  });
 });
 
-function createBoard() {
-  for (let i = 0; i < 9; i++) {
-    const cell = document.createElement("div");
-    cell.classList.add("cell");
-    cell.addEventListener("click", handleCellClick);
-    gameBoard.appendChild(cell);
+//disable condition
+const disablebox = () => {
+  for (let box of boxes) {
+    box.disabled = true;
   }
-  updateCurrentPlayerDisplay(); // Show the initial player
-}
+};
+const enableboxes = () => {
+  for (let box of boxes) {
+    box.disabled = false;
+    box.innerText = "";
+  }
+};
 
-function handleCellClick(event) {
-  clickSound.play();
-  const cell = event.target;
-  if (!cell.textContent && !gameIsOver) {
-    cell.textContent = currentPlayer;
+const showWinner = (winner) => {
+  msg.innerText = `Congratulation,winner is ${winner}`;
+  msgContainer.forEach((msgcont) => {
+    msgcont.classList.remove("hide");
+  });
+  // msgContainer.classList.remove("hide");
+  disablebox();
+};
 
-    // Add class for styling based on current player
-    cell.classList.add(currentPlayer.toLowerCase());
+const checkWinner = () => {
+  for (let pattern of winPatterns) {
+    //     console.log(pattern[0],pattern[1],pattern[2]);
+    // console.log(
+    //     boxes[pattern[0]].innerText,
+    //     boxes[pattern[1]].innerText,
+    //     boxes[pattern[2]].innerText
+    //  );
+    let pos1 = boxes[pattern[0]].innerText;
+    let pos2 = boxes[pattern[1]].innerText;
+    let pos3 = boxes[pattern[2]].innerText;
 
-    if (checkWinner()) {
-      resultElement.textContent = `${currentPlayer} wins!`;
-      gameIsOver = true;
-    } else if (isBoardFull()) {
-      resultElement.textContent = "It's a draw!";
-      gameIsOver = true;
-    } else {
-      currentPlayer = currentPlayer === "X" ? "O" : "X";
-      updateCurrentPlayerDisplay(); // Update display after each turn
+    if (pos1 != "" && pos2 != "" && pos3 != "") {
+      if (pos1 === pos2 && pos2 === pos3) {
+        // console.log("winner",pos1);
+        showWinner(pos1);
+        return;
+      }
     }
   }
-}
-
-function updateCurrentPlayerDisplay() {
-  currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-  console.log("Current player:", currentPlayer);
-}
-
-function checkWinner() {
-  const winningCombinations = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-
-  for (let combination of winningCombinations) {
-    if (
-      gameBoard.children[combination[0]].textContent ===
-        gameBoard.children[combination[1]].textContent &&
-      gameBoard.children[combination[1]].textContent ===
-        gameBoard.children[combination[2]].textContent &&
-      gameBoard.children[combination[0]].textContent !== ""
-    ) {
-      winSound.play();
-      return true;
+  let fill = true;
+  for (let box of boxes) {
+    if (box.innerText === "") {
+      fill = false;
+      break;
     }
   }
-
-  return false;
-}
-
-function isBoardFull() {
-  for (let i = 0; i < gameBoard.children.length; i++) {
-    if (gameBoard.children[i].textContent === "") {
-      return false;
-    }
+  if (fill) {
+    match_drow();
   }
-  return true;
-}
+};
 
-function resetGame() {
-  currentPlayer = "X";
-  gameIsOver = false;
-  resultElement.textContent = "";
-  updateCurrentPlayerDisplay(); // Reset display on game reset
-
-  for (let i = 0; i < gameBoard.children.length; i++) {
-    gameBoard.children[i].textContent = "";
-    gameBoard.children[i].classList.remove("x", "o"); // Remove the classes
-  }
-}
-
-// Set up the reset button
-const resetButton = document.getElementById("resetButton");
-resetButton.addEventListener("click", resetGame);
-
-createBoard();
+newgame.addEventListener("click", newgm);
+resetbtn.addEventListener("click", resetgame);
