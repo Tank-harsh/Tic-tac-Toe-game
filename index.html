@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Tic-Tac-Toe</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="Stylesheet" href="css/style.css" />
   </head>
   <body>
-     <!-- Background Video -->
-  <video autoplay muted loop id="backgroundVideo">
-    <source src="/tictac.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-    <div class="currentPlayer">
-      <div id="currentPlayer">Current Player: X</div>
-    </div class="content">
-    <div>
-    <!-- Added this line -->
-    <div id="gameBoard"></div>
-    <div id="result"></div>
-    <div id="buttonDiv">
-      <button id="resetButton">Play Again</button>
-      <button id="soundButton">Sound: ON</button>
+    <div class="msg-container hide">
+      <p id="massage">Winner</p>
     </div>
+    <div class="matchdrow hide">
+      <p id="massage_drow">drow</p>
     </div>
-    <script src="js/script.js"></script>
+    <main>
+      <h1 id="heading">Tic Tac Toe</h1>
+    </main>
+    <div class="container">
+      <div class="game">
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+      </div>
+    </div>
+    <div class="msg-container hide">
+      <button id="new-game">new</button>
+    </div>
+    <button id="reset_button">Reset</button>
+    <script src="js/index.js"></script>
   </body>
 </html>
